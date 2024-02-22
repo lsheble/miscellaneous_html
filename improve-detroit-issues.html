@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Improve Detroit 311 Issues</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="improve-detroit-issues_files/libs/clipboard/clipboard.min.js"></script>
+<script src="improve-detroit-issues_files/libs/quarto-html/quarto.js"></script>
+<script src="improve-detroit-issues_files/libs/quarto-html/popper.min.js"></script>
+<script src="improve-detroit-issues_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="improve-detroit-issues_files/libs/quarto-html/anchor.min.js"></script>
+<link href="improve-detroit-issues_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="improve-detroit-issues_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="improve-detroit-issues_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="improve-detroit-issues_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="improve-detroit-issues_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+<link href="improve-detroit-issues_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="improve-detroit-issues_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#missing-data-by-column" id="toc-missing-data-by-column" class="nav-link" data-scroll-target="#missing-data-by-column">Missing Data by column</a></li>
+  <li><a href="#request-type-title-categories" id="toc-request-type-title-categories" class="nav-link" data-scroll-target="#request-type-title-categories">‘Request Type Title’ categories</a></li>
+  <li><a href="#categorical-data-bar-plots" id="toc-categorical-data-bar-plots" class="nav-link" data-scroll-target="#categorical-data-bar-plots">Categorical data bar plots</a></li>
+  <li><a href="#number-of-issues-over-time" id="toc-number-of-issues-over-time" class="nav-link" data-scroll-target="#number-of-issues-over-time">Number of issues over time</a></li>
+  <li><a href="#continuous-data-columns-histograms" id="toc-continuous-data-columns-histograms" class="nav-link" data-scroll-target="#continuous-data-columns-histograms">Continuous data columns: Histograms</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Improve Detroit 311 Issues</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">February 22, 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(improve_detroit_issues_all) <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, <span class="fu">colnames</span>(improve_detroit_issues_all))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># descriptive labels for summary info</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>colname_desc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Rows"</span>, <span class="st">"Columns"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Discrete value columns"</span>, <span class="st">"Continuous value columns"</span>, <span class="st">"All missing columns"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Missing observations"</span>, <span class="st">"Complete Rows"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Total observations"</span>, <span class="st">"Memory allocation"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># custom function to transpose while preserving names</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>transpose_df <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  t_df <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">transpose</span>(df)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   colnames(t_df) &lt;- rownames(df)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(t_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Observation"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># rownames(t_df) &lt;- colnames(df)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(t_df) <span class="ot">&lt;-</span> colname_desc</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  t_df <span class="ot">&lt;-</span> t_df <span class="sc">%&gt;%</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="at">.data =</span> ., <span class="at">var =</span> <span class="st">"Dataset Dimension"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">as_tibble</span>(.)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(t_df)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">transpose_df</span>(<span class="fu">introduce</span>(improve_detroit_issues_all))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Dataset Dimension"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Observation"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Rows","2":"514792"},{"1":"Columns","2":"24"},{"1":"Discrete value columns","2":"15"},{"1":"Continuous value columns","2":"9"},{"1":"All missing columns","2":"0"},{"1":"Missing observations","2":"1860031"},{"1":"Complete Rows","2":"60"},{"1":"Total observations","2":"12355008"},{"1":"Memory allocation","2":"224661440"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_intro</span>(improve_detroit_issues_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="improve-detroit-issues_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="missing-data-by-column" class="level2">
+<h2 class="anchored" data-anchor-id="missing-data-by-column">Missing Data by column</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">profile_missing</span>(improve_detroit_issues_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["feature"],"name":[1],"type":["fct"],"align":["left"]},{"label":["num_missing"],"name":[2],"type":["int"],"align":["right"]},{"label":["pct_missing"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"ID","2":"0","3":"0.000000000"},{"1":"Status","2":"0","3":"0.000000000"},{"1":"Request_Type_Title","2":"0","3":"0.000000000"},{"1":"Description","2":"16350","3":"0.031760400"},{"1":"Web_Url","2":"0","3":"0.000000000"},{"1":"Report_Method","2":"0","3":"0.000000000"},{"1":"Priority_Code","2":"0","3":"0.000000000"},{"1":"Created_At","2":"0","3":"0.000000000"},{"1":"Acknowledged_At","2":"30627","3":"0.059493932"},{"1":"Closed_At","2":"33263","3":"0.064614446"},{"1":"Reopened_At","2":"507958","3":"0.986724735"},{"1":"Updated_At","2":"0","3":"0.000000000"},{"1":"Days_to_Close","2":"33263","3":"0.064614446"},{"1":"SLA","2":"256849","3":"0.498937435"},{"1":"Closed_Within_SLA","2":"273146","3":"0.530594881"},{"1":"Canonical_Issue_ID","2":"499743","3":"0.970766834"},{"1":"Address","2":"0","3":"0.000000000"},{"1":"Latitude","2":"43967","3":"0.085407310"},{"1":"Longitude","2":"43967","3":"0.085407310"},{"1":"oid","2":"0","3":"0.000000000"},{"1":"Address_ID","2":"118293","3":"0.229787953"},{"1":"Zip_Code","2":"867","3":"0.001684175"},{"1":"Council_District","2":"869","3":"0.001688060"},{"1":"Neighborhood","2":"869","3":"0.001688060"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing</span>(improve_detroit_issues_all, <span class="at">missing_only =</span> <span class="cn">TRUE</span>, <span class="at">title =</span> <span class="st">"Fields with null or missing values: Percent null or missing"</span>,  <span class="at">group =</span> <span class="fu">list</span>(<span class="at">Good =</span> <span class="fl">0.05</span>, <span class="at">Review =</span> <span class="fl">0.4</span>, <span class="at">Infrequent =</span> <span class="fl">0.8</span>, <span class="at">Rare =</span> <span class="dv">1</span>),<span class="at">group_color =</span> <span class="fu">list</span>(<span class="at">Good =</span> <span class="st">"#1B9E77"</span>, <span class="at">Review =</span> <span class="st">"#E6AB02"</span>, <span class="at">Infrequent =</span> <span class="st">"#D95F02"</span>, <span class="at">Rare =</span> <span class="st">"#E41A1C"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="improve-detroit-issues_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="request-type-title-categories" class="level2">
+<h2 class="anchored" data-anchor-id="request-type-title-categories">‘Request Type Title’ categories</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>improve_detroit_issues_all <span class="sc">|&gt;</span> <span class="fu">select</span>(Request_Type_Title) <span class="sc">|&gt;</span> <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Request_Type_Title"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"DPW - Debris Removal - DPW USE ONLY"},{"1":"Potholes"},{"1":"Curbside Solid Waste Issue"},{"1":"Curbside - DPW ONLY"},{"1":"Illegal Dump Sites"},{"1":"Investigate Cave In (Sink Hole)"},{"1":"Investigate Blocked Basin Street"},{"1":"Other - Not within City jurisdiction"},{"1":"DPW - Other environmental - DPW USE ONLY"},{"1":"Investigate Service Leak"},{"1":"Investigate Running Water Vacant Property"},{"1":"Rodent Extermination"},{"1":"Other - Referred to other City Department"},{"1":"Traffic Sign Issue"},{"1":"Investigate Fire Hydrant Related Issues"},{"1":"Investigate Water Main Break"},{"1":"Tree Issue"},{"1":"Street Light Out"},{"1":"Park Issue"},{"1":"Abandoned Vehicle"},{"1":"Dead Animal Removal"},{"1":"Squatters Issue"},{"1":"Traffic Signal Issue"},{"1":"Street Light / Street Light Pole Major Repair"},{"1":"Investigate Manhole Cover"},{"1":"Traffic Complaints"},{"1":"Street Light Pole Down"},{"1":"Illegal Signs - GSD Only"},{"1":"Investigate Blocked Basin Alley"},{"1":"Investigate Missing Catch Basin Cover"},{"1":"Cave-In over the Sewer"},{"1":"Reboard House Request"},{"1":"Investigate Restoration"},{"1":"Graffiti Abatement - Major Project"},{"1":"Residential Snow Removal Issue"},{"1":"Illegal Dumping In Progress"},{"1":"Other - Not within scope of City services"},{"1":"Graffiti Abatement"},{"1":"Alley Grading - DPW Use Only"},{"1":"Historic District Commission Approval Verification Request"},{"1":"Vacant Lot Cutting"},{"1":"Cemetery Issue"},{"1":"Investigate Water In Basement (Basement Backup)"},{"1":"Marina Issue"},{"1":"Alley Debris – GSD ONLY"},{"1":"Squatters - Fraud Investigation"},{"1":"Vacant Service Leak"},{"1":"Rodent Extermination - BSEED Only"},{"1":"Blocked Catch Basin"},{"1":"Running Water in a Home or Building"},{"1":"Manhole Cover Issue"},{"1":"Fire Hydrant Issue"},{"1":"Water Main Break"},{"1":"Clogged Drain"},{"1":"Abandoned Vehicle - On Street"},{"1":"Abandoned Vehicles – On private property"},{"1":"Water In Basement Investigation"},{"1":"Tall Grass and Weeds"},{"1":"DPW DR Coordinator - DPW use only"},{"1":"Alley Debris Pick Up - AAX Only"},{"1":"Alley Debris Pick Up – RT Contracting Only"},{"1":"Bus Shelter Issues"},{"1":"Alley Debris Pick Up – DGC Only"},{"1":"Existing Speed Humps"},{"1":"Hazardous Spill"},{"1":"Marijuana Business Related Concern"},{"1":"Construction Sign/Barricade Removal – DPW USE ONLY"},{"1":"Assessment Letter - DPW AND BSEED USE ONLY"},{"1":"Vacant Lot Grass Cutting"},{"1":"BRT Debris Pick Up - DGC ONLY"},{"1":"BRT Debris Pick Up – Payne ONLY"},{"1":"PDU Maintenance"},{"1":"BRT Debris Pick Up – Homrich ONLY"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="categorical-data-bar-plots" class="level2">
+<h2 class="anchored" data-anchor-id="categorical-data-bar-plots">Categorical data bar plots</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cat_cols &lt;- c("Status", "Report_Method", "Priority_Code", "Council_District", "Zip_code")</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>improve_detroit_issues_all<span class="sc">$</span>Council_District <span class="ot">&lt;-</span> <span class="fu">as.character</span>(improve_detroit_issues_all<span class="sc">$</span>Council_District)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>improve_detroit_issues_all<span class="sc">$</span>Priority_Code <span class="ot">&lt;-</span> <span class="fu">as.character</span>(improve_detroit_issues_all<span class="sc">$</span>Priority_Code)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>improve_detroit_issues_all <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Status"</span>, <span class="st">"Report_Method"</span>, <span class="st">"Priority_Code"</span>, <span class="st">"Closed_Within_SLA"</span>, <span class="st">"Council_District"</span>) <span class="sc">|&gt;</span> <span class="fu">plot_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="improve-detroit-issues_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_bar(improve_detroit_issues_all[,])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="number-of-issues-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="number-of-issues-over-time">Number of issues over time</h2>
+<p>Based on the “Created At” field, the relative number of issues per month from July 14 2014 to Feb 22 2024.</p>
+<ul>
+<li>Min: 2014-07-14 12:54:47</li>
+<li>Mean: 2020-03-19 09:37:07.680974</li>
+<li>Max: 2024-02-22 05:27:27</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_time <span class="ot">&lt;-</span> improve_detroit_issues_all <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Created_At) <span class="sc">|&gt;</span> <span class="co">#, Acknowledged_At, Closed_At, Reopened_At, Updated_At)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">created_yr_month =</span> <span class="fu">as.Date</span>(<span class="fu">as.yearmon</span>(Created_At))) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(created_yr_month) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total =</span> <span class="fu">n</span>())</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_time, <span class="fu">aes</span>(<span class="at">x=</span>created_yr_month, <span class="at">y=</span>total, <span class="at">group=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#279989"</span>) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ma</span>(<span class="at">ma_fun =</span> SMA, <span class="at">n =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#004445"</span>, <span class="at">linetype =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="fl">1.25</span>) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Issue 'Created At' dates over time"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Monthly counts annotated with a line indicating the 3-month simple moving average (SMA)"</span>, </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Issues Opened"</span>, </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels=</span><span class="st">"%b %Y"</span>,<span class="at">date_breaks  =</span><span class="st">"3 month"</span>) <span class="sc">+</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">60</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="improve-detroit-issues_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Graph presents counts of monthly certificates issued plus the simple moving average based on a 3-month window.</p>
+</section>
+<section id="continuous-data-columns-histograms" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-data-columns-histograms">Continuous data columns: Histograms</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>improve_detroit_issues_all <span class="sc">|&gt;</span> <span class="fu">select</span>(Days_to_Close, SLA) <span class="sc">|&gt;</span> <span class="fu">plot_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="improve-detroit-issues_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,38 @@
+---
+title: "cad-911"
+---
+
+## Detroit ODP Links
+- https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/911_Calls_New/FeatureServer/0/query?where=zip_code%20%3D%20%2748207%27&outFields=*&outSR=4326&f=json
+- https://data.detroitmi.gov/api/feed/dcat-us/1.1
+- [City of Detroit on Data.World](https://data.world/detroit)
+
+## Resources
+
+- Data.World has a prevous version of the dataset named, "[Detroit 911 Calls](https://data.world/detroit/detroit-911-calls)".
+- Motor City 911. [Detroit Police Glossary](https://www.motorcity911.com/glossary/).
+  example entries: A&B = Assault & Battery; BSA = Handgun, Blue Steel Automatic.
+- Center for Behavioral Health & Justice, WSU School of Social Work. [Michigan statewide emergency dispatch survey, December 2021](https://behaviorhealthjustice.wayne.edu/crisis-response/dispatch-survey-dec21). Calls related to mental health is a focus, as are Public Service Telecommunicators (PSTs) views on resources and how crisis response might be improved through dispatch.
+Data Clinic (2022, Mar 29). [Scout goes global](https://medium.com/dataclinic/scout-goes-global-4113dda08928).
+- Vera Institue of Justice, Data Clinic. [Vera](https://github.com/tsdataclinic/Vera). 911 calls for service. Includes information about consolidation of 911 data from 5 cities.
+- Data Clinic (2020, March 12). [Creating a Consolidated Taxonomy for 911 Call Data across Different US Cities (Part 2)](https://medium.com/dataclinic/creating-a-consolidated-taxonomy-for-911-call-data-across-different-us-cities-part-2-9600cb09abfd).
+  - Covers challenges faced and steps taken when merging 911 service call data for different cities.
+- [NENA The 9-1-1 Association](https://www.nena.org/). Focus: Emergency response standards development, training, thought leadership, outreach, and advocacy. 
+[Michigan State Police](https://www.michigan.gov/msp/divisions/cjic). 911 GIS resources: [DTMB NextGen911](https://www.michigan.gov/dtmb/services/maps/michigan-statewide-ng911-gis-repository)
+
+
+## Examples
+- [UM Division of Public Safety & Security Data and Statistics](https://www.dpss.umich.edu/content/crime-safety-data/data-statistics/)
+- Grand Blanc Township PD. [Dispatch/Records Bureau](https://www.grandblanctwpmi.gov/231/Dispatch-Records-Bureau)
+- [NYPD Calls for Service (Year to Date)](https://data.cityofnewyork.us/Public-Safety/NYPD-Calls-for-Service-Year-to-Date-/n2zq-pubd/about_data).
+
+
+
+## Analyses
+- Two Sigma Data Clinic.911 [Call Analysis: Announcing a Consolidated Dataset of 911 Calls for Five US Cities (Part 1)](https://www.twosigma.com/articles/911-call-analysis-announcing-a-consolidated-dataset-of-911-calls-for-five-us-cities-part-1/). 
+  - includes Detroit
+- Data clinic. 2020, Mar 30. [Exploring Temporal and Geographic Patterns of 911 Calls within US Cities (Part 3)](https://medium.com/dataclinic/exploring-temporal-and-geographic-patterns-of-911-calls-within-us-cities-part-3-980c858ff646).
+- LaBerge, A., Mason, M., & Sanders, K. (2022). Police dispatch times: The effects of neighborhood structural disadvantage. _Journal of Criminal Justice 79_.  [https://doi.org/10.1016/j.jcrimjus.2022.101885](https://www.sciencedirect.com/science/article/pii/S0047235222000058)
+  
+
+  
